@@ -27,7 +27,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install customtkinter pandas numpy pyyaml pyinstaller
+          pip install customtkinter pandas numpy pyyaml pyinstaller pyarrow
 
       - name: Build with PyInstaller (Windows)
         if: matrix.os == 'windows-latest'
