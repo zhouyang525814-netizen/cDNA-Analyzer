@@ -1,6 +1,4 @@
 # app.py
-import faulthandler
-faulthandler.enable()
 import os
 import datetime
 import customtkinter as ctk
