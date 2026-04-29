@@ -6,7 +6,6 @@ from tkinter import filedialog, messagebox
 from core_engine import DemultiplexEngine
 import yaml
 from analysis_engine import EnrichmentAnalyzer  # <--- 新增
-from visualizer import LibraryVisualizer  # <--- 新增
 import traceback
 # 设定主题
 ctk.set_appearance_mode("dark")
