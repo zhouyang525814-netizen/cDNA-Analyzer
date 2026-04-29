@@ -1,0 +1,52 @@
+name: Build cDNA-Analyzer Desktop App
+
+on:
+  workflow_dispatch: 
+  push:
+    tags:
+      - 'v*'
+    paths:
+      - '.github/workflows/**'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install customtkinter pandas numpy pyyaml pyinstaller
+
+      - name: Build with PyInstaller (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          pyinstaller --noconsole --onedir --name "cDNA-Analyzer-Win" --collect-all customtkinter app.py
+          Compress-Archive -Path dist\cDNA-Analyzer-Win -DestinationPath cDNA-Analyzer-Windows.zip
+
+      - name: Build with PyInstaller (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          pyinstaller --windowed --name "cDNA-Analyzer-Mac" --collect-all customtkinter app.py
+          cd dist
+          zip -r ../cDNA-Analyzer-macOS.zip "cDNA-Analyzer-Mac.app"
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: App-Release-${{ matrix.os }}
+          path: |
+            cDNA-Analyzer-Windows.zip
+            cDNA-Analyzer-macOS.zip
+          retention-days: 7
